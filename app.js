@@ -40,7 +40,19 @@ app.use('/', evaluacionesRoutes);
 const calificacionesRoutes = require('./routes/calificaciones.routes');
 app.use('/', calificacionesRoutes);
 
+const asistenciasRoutes = require('./routes/asistencias.routes');
+app.use('/', asistenciasRoutes);
 
+const aulasRoutes = require('./routes/aulas.routes');
+app.use('/', aulasRoutes);
+
+
+const horariosRoutes = require('./routes/horarios.routes');
+app.use('/', horariosRoutes);
+
+
+const pagoRoutes = require('./routes/pago.routes');
+app.use('/', pagoRoutes);
 
 // Conexión a la base de datos
 sequelize.authenticate()
