@@ -2,6 +2,7 @@
 const { DataTypes } = require('sequelize');
 const db = require('../db/db');
 const Rol = require('./roles.model'); // Importamos el modelo de roles
+const bcrypt = require('bcryptjs');
 
 const Usuario = db.define('usuarios', {
 
@@ -24,7 +25,10 @@ const Usuario = db.define('usuarios', {
     correo: {
         type: DataTypes.STRING(150),
         allowNull: false,
-        unique: true
+        unique: true,
+        validate: {
+            isEmail: true
+        }
     },
 
     contrasena: {
@@ -41,10 +45,25 @@ const Usuario = db.define('usuarios', {
     tableName: 'usuarios',
     timestamps: true,
     createdAt: 'created_at',
-    updatedAt: 'updated_at'
+    updatedAt: 'updated_at',
+    hooks: {
+        // Antes de guardar el usuario, encriptar la contraseña
+        beforeCreate: async (usuario) => {
+            if (usuario.contrasena) {
+                const salt = await bcrypt.genSalt(10);
+                usuario.contrasena = await bcrypt.hash(usuario.contrasena, salt);
+            }
+        },
+        beforeUpdate: async (usuario) => {
+            if (usuario.contrasena && usuario.changed('contrasena')) {
+                const salt = await bcrypt.genSalt(10);
+                usuario.contrasena = await bcrypt.hash(usuario.contrasena, salt);
+            }
+        }
+    }
 });
 
-// Relación: cada usuario pertenece a un rol
+// Relación con rol
 Usuario.belongsTo(Rol, {
     foreignKey: 'rol_id',
     as: 'rol'

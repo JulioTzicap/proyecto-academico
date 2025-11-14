@@ -2,28 +2,34 @@
 const express = require('express');
 require('dotenv').config();
 const sequelize = require('./db/db');
+const { verificarToken } = require('./middleware/auth.middleware');
+
 
 const app = express();
 app.use(express.json());
 
+// Rutas
 const rolesRoutes = require('./routes/roles.routes');
 app.use('/', rolesRoutes);
 
 const usuariosRoutes = require('./routes/usuarios.routes');
 app.use('/', usuariosRoutes);
 
+const authRoutes = require('./routes/auth.routes'); // <-- Rutas de login
+app.use('/api/auth', authRoutes);
+
+
 const estudiantesRoutes = require('./routes/estudiantes.routes');
 app.use('/', estudiantesRoutes);
 
 const docentesRoutes = require('./routes/docentes.routes');
-app.use('/api/docentes', docentesRoutes);
+app.use('/api/docentes', verificarToken,  docentesRoutes);
 
 const carrerasRoutes = require('./routes/carreras.routes');
 app.use('/', carrerasRoutes);
 
 const cursosRoutes = require('./routes/cursos.routes');
 app.use('/', cursosRoutes);
-
 
 const seccionesRoutes = require('./routes/secciones.routes');
 app.use('/', seccionesRoutes);
@@ -46,10 +52,8 @@ app.use('/', asistenciasRoutes);
 const aulasRoutes = require('./routes/aulas.routes');
 app.use('/', aulasRoutes);
 
-
 const horariosRoutes = require('./routes/horarios.routes');
 app.use('/', horariosRoutes);
-
 
 const pagoRoutes = require('./routes/pago.routes');
 app.use('/', pagoRoutes);
@@ -60,11 +64,11 @@ sequelize.authenticate()
     console.log('Conexión a la base de datos establecida correctamente');
   })
   .catch((error) => {
-    console.error(' Error al conectar con la base de datos:', error);
+    console.error('Error al conectar con la base de datos:', error);
   });
 
 // Iniciar servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-  console.log(` Servidor corriendo en el puerto ${PORT}`);
+  console.log(`Servidor corriendo en el puerto ${PORT}`);
 });
