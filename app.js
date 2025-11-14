@@ -6,6 +6,42 @@ const sequelize = require('./db/db');
 const app = express();
 app.use(express.json());
 
+const rolesRoutes = require('./routes/roles.routes');
+app.use('/', rolesRoutes);
+
+const usuariosRoutes = require('./routes/usuarios.routes');
+app.use('/', usuariosRoutes);
+
+const estudiantesRoutes = require('./routes/estudiantes.routes');
+app.use('/', estudiantesRoutes);
+
+const docentesRoutes = require('./routes/docentes.routes');
+app.use('/api/docentes', docentesRoutes);
+
+const carrerasRoutes = require('./routes/carreras.routes');
+app.use('/', carrerasRoutes);
+
+const cursosRoutes = require('./routes/cursos.routes');
+app.use('/', cursosRoutes);
+
+
+const seccionesRoutes = require('./routes/secciones.routes');
+app.use('/', seccionesRoutes);
+
+const asignacionRoutes = require('./routes/asignacion.routes');
+app.use('/api/asignaciones', asignacionRoutes);
+
+const matriculaRoutes = require('./routes/matricula.routes');
+app.use('/api/matricula', matriculaRoutes);
+
+const evaluacionesRoutes = require('./routes/evaluaciones.routes');
+app.use('/', evaluacionesRoutes);
+
+const calificacionesRoutes = require('./routes/calificaciones.routes');
+app.use('/', calificacionesRoutes);
+
+
+
 // Conexión a la base de datos
 sequelize.authenticate()
   .then(() => {
